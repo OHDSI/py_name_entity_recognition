@@ -98,4 +98,4 @@ jobs:
 
     - name: Publish package
       if: steps.check_version.outputs.skip == 'false'
-      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+      uses: pypa/gh-action-pypi-publish@release/v1
