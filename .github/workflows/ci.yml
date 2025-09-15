@@ -39,10 +39,6 @@ jobs:
       run: |
         poetry run black --check .
 
-    - name: Download spacy model
-      run: |
-        poetry run python -m spacy download en_core_web_sm
-
     - name: Test with pytest
       run: |
         poetry run pytest --cov=py_name_entity_recognition --cov-report=xml
