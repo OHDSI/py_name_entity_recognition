@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py_name_entity_recognition"
-version = "1.0.5"
+version = "1.0.6"
 description = "LLM-based Named Entity Recognition using LangChain and LangGraph"
 authors = ["Gowtham Rao <rao@ohdsi.org>"]
 license = "Apache-2.0"
@@ -45,6 +45,7 @@ pytest-cov = "^6.2.1"
 pytest-mock = "^3.14.1"
 black = "^23.11.0"
 ruff = "^0.4.0"
+langchain-core = "^0.2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
