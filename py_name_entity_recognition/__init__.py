@@ -6,7 +6,9 @@ agentic, and self-refining extraction workflows. It includes a comprehensive cat
 of predefined schemas for scientific and biomedical text.
 """
 
-__version__ = "0.1.0"
+from importlib import metadata
+
+__version__ = metadata.version("py_name_entity_recognition")
 
 # Expose the primary user-facing function for easy access.
 # Expose the catalog features for schema customization and extension.

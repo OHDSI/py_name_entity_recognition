@@ -45,6 +45,7 @@ pytest-cov = "^6.2.1"
 pytest-mock = "^3.14.1"
 black = "^23.11.0"
 ruff = "^0.4.0"
+langchain-core = "^0.2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
