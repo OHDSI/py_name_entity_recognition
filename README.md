@@ -13,6 +13,13 @@
 
 ## Installation
 
+**Note on spaCy Model Dependency**
+
+This package requires the `en_core_web_sm` spaCy model for tokenization. Before using the package, please ensure you have downloaded this model by running:
+```bash
+python -m spacy download en_core_web_sm
+```
+
 This project uses [Poetry](https://python-poetry.org/) for dependency management and packaging.
 
 1.  **Clone the repository:**
