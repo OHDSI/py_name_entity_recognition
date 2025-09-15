@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py_name_entity_recognition"
-version = "0.9.0"
+version = "1.0.0"
 description = "LLM-based Named Entity Recognition using LangChain and LangGraph"
 authors = ["Gowtham Rao <rao@ohdsi.org>"]
 license = "Apache-2.0"
