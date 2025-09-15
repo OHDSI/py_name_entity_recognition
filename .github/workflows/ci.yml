@@ -77,23 +77,15 @@ jobs:
       run: |
         pip install poetry
 
-    - name: Check if version is already published
-      id: check_version
+    - name: Set version from tag
       run: |
-        PACKAGE_NAME="py_name_entity_recognition"
-        PACKAGE_VERSION=$(poetry version --short)
-        if pip index versions $PACKAGE_NAME 2>/dev/null | grep -q $PACKAGE_VERSION; then
-          echo "Version $PACKAGE_VERSION of $PACKAGE_NAME is already published."
-          echo "skip=true" >> $GITHUB_OUTPUT
-        else
-          echo "Version $PACKAGE_VERSION of $PACKAGE_NAME is not yet published."
-          echo "skip=false" >> $GITHUB_OUTPUT
-        fi
+        # The GITHUB_REF is in the format 'refs/tags/vX.Y.Z'
+        # We extract X.Y.Z
+        VERSION=${GITHUB_REF#refs/tags/v}
+        poetry version $VERSION
     - name: Build package
-      if: steps.check_version.outputs.skip == 'false'
       run: |
         poetry build
 
     - name: Publish package
-      if: steps.check_version.outputs.skip == 'false'
       uses: pypa/gh-action-pypi-publish@release/v1
