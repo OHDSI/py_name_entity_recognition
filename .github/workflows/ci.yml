@@ -89,15 +89,10 @@ jobs:
           echo "Version $PACKAGE_VERSION of $PACKAGE_NAME is not yet published."
           echo "skip=false" >> $GITHUB_OUTPUT
         fi
-    - name: Install dependencies
-      if: steps.check_version.outputs.skip == 'false'
-      run: |
-        pip install build
-
     - name: Build package
       if: steps.check_version.outputs.skip == 'false'
       run: |
-        python -m build
+        poetry build
 
     - name: Publish package
       if: steps.check_version.outputs.skip == 'false'
