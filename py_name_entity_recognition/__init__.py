@@ -7,23 +7,24 @@ of predefined schemas for scientific and biomedical text.
 """
 
 import os
+
 import toml
+
+from .catalog import PRESETS, get_schema, register_entity
+from .data_handling.io import extract_entities
 
 # Correctly locate pyproject.toml relative to the current file
 # __file__ -> /app/py_name_entity_recognition/__init__.py
 # os.path.dirname(__file__) -> /app/py_name_entity_recognition
 # os.path.dirname(os.path.dirname(__file__)) -> /app
-pyproject_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'pyproject.toml')
+pyproject_path = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "pyproject.toml"
+)
 
-with open(pyproject_path, 'r') as f:
+with open(pyproject_path) as f:
     pyproject_data = toml.load(f)
 
-__version__ = pyproject_data['tool']['poetry']['version']
-
-# Expose the primary user-facing function for easy access.
-# Expose the catalog features for schema customization and extension.
-from .catalog import PRESETS, get_schema, register_entity
-from .data_handling.io import extract_entities
+__version__ = pyproject_data["tool"]["poetry"]["version"]
 
 __all__ = [
     "extract_entities",
