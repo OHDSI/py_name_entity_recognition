@@ -1,0 +1,13 @@
+# Coverage reports
+.coverage
+*.coverage
+coverage.xml
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Poetry
+.venv/

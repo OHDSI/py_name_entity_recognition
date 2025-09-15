@@ -1,0 +1,96 @@
+name: Test and Publish
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Poetry
+      run: |
+        pip install poetry
+        poetry config virtualenvs.create false
+
+    - name: Install dependencies
+      run: |
+        poetry install --no-root --no-interaction --no-ansi
+
+    - name: Lint with ruff
+      run: |
+        poetry run ruff check .
+
+    - name: Format with black
+      run: |
+        poetry run black --check .
+
+    - name: Download spacy model
+      run: |
+        poetry run python -m spacy download en_core_web_sm
+
+    - name: Test with pytest
+      run: |
+        poetry run pytest --cov=py_name_entity_recognition --cov-report=xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install Poetry
+      run: |
+        pip install poetry
+
+    - name: Check if version is already published
+      id: check_version
+      run: |
+        PACKAGE_NAME="py_name_entity_recognition"
+        PACKAGE_VERSION=$(poetry version --short)
+        if pip index versions $PACKAGE_NAME 2>/dev/null | grep -q $PACKAGE_VERSION; then
+          echo "Version $PACKAGE_VERSION of $PACKAGE_NAME is already published."
+          echo "skip=true" >> $GITHUB_OUTPUT
+        else
+          echo "Version $PACKAGE_VERSION of $PACKAGE_NAME is not yet published."
+          echo "skip=false" >> $GITHUB_OUTPUT
+        fi
+    - name: Install dependencies
+      if: steps.check_version.outputs.skip == 'false'
+      run: |
+        pip install build
+
+    - name: Build package
+      if: steps.check_version.outputs.skip == 'false'
+      run: |
+        python -m build
+
+    - name: Publish package
+      if: steps.check_version.outputs.skip == 'false'
+      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
