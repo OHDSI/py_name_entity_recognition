@@ -22,6 +22,8 @@ python -m spacy download en_core_web_sm
 
 This project uses [Poetry](https://python-poetry.org/) for dependency management and packaging.
 
+**Windows Users**: Some dependencies, like `numpy`, may require C++ compiler tools to be installed on your system. If you encounter installation errors related to a missing C++ compiler, please install the [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+
 1.  **Clone the repository:**
     ```bash
     git clone https://github.com/GowthamRao/py_name_entity_recognition.git
