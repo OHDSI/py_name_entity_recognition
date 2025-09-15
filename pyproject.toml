@@ -8,6 +8,11 @@ readme = "README.md"
 homepage = "https://github.com/GowthamRao/py_name_entity_recognition"
 repository = "https://github.com/GowthamRao/py_name_entity_recognition"
 keywords = ["ner", "named entity recognition", "llm", "langchain", "langgraph", "nlp"]
+classifiers = [
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux"
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
