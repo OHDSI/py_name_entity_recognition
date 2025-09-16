@@ -55,5 +55,5 @@ class ModelConfig(BaseModel):
     class Config:
         """Pydantic model configuration."""
 
-        allow_population_by_field_name = True
+        validate_by_name = True
         extra = "ignore"
