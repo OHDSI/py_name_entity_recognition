@@ -3,6 +3,7 @@ from typing import Literal, Optional
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 class ModelConfig(BaseSettings):
     """
     A unified configuration schema that automatically loads settings from a .env file
@@ -20,7 +21,7 @@ class ModelConfig(BaseSettings):
     # This is the key change: It now reads 'AZURE_OPENAI_DEPLOYMENT' from .env
     # and makes it a required field.
     model_name: str = Field(
-        default=..., # '...' makes this field required
+        default=...,  # '...' makes this field required
         alias="AZURE_OPENAI_DEPLOYMENT",
         description="The specific model/deployment name to use.",
     )
@@ -39,7 +40,7 @@ class ModelConfig(BaseSettings):
         gt=0,
         description="The maximum number of tokens to generate in the completion.",
     )
-    
+
     top_p: Optional[float] = Field(
         default=None,
         ge=0.0,
@@ -54,13 +55,13 @@ class ModelConfig(BaseSettings):
         alias="AZURE_OPENAI_DEPLOYMENT",
         description="The name of the Azure OpenAI deployment.",
     )
-    
+
     azure_endpoint: Optional[str] = Field(
         default=None,
         alias="AZURE_OPENAI_ENDPOINT",
         description="The endpoint URL for the Azure OpenAI service.",
     )
-    
+
     api_version: Optional[str] = Field(
         default=None,
         alias="AZURE_OPENAI_API_VERSION",
@@ -71,5 +72,5 @@ class ModelConfig(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        extra="ignore"
+        extra="ignore",
     )

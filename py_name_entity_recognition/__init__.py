@@ -6,17 +6,17 @@ agentic, and self-refining extraction workflows. It includes a comprehensive cat
 of predefined schemas for scientific and biomedical text.
 """
 
-import sys
-
-from .catalog import PRESETS, get_schema, register_entity
-from .data_handling.io import extract_entities
-
-# Load version and PackageNotFoundError from importlib.metadata (Python >= 3.8)
+# Standard library
 try:
     from importlib.metadata import PackageNotFoundError, version
 except ImportError:
     from importlib_metadata import PackageNotFoundError, version  # Fallback for Python < 3.8
 
+# Local imports
+from .catalog import PRESETS, get_schema, register_entity
+from .data_handling.io import extract_entities
+
+# Package version
 try:
     # The package name is found in the [project] section of pyproject.toml
     __version__ = version("py-name-entity-recognition")
