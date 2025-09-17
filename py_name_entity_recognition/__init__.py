@@ -8,15 +8,14 @@ of predefined schemas for scientific and biomedical text.
 
 import sys
 
-# Use importlib.metadata to correctly get the version from installed package metadata
-# This is the standard, modern way and avoids FileNotFoundError.
-if sys.version_info < (3, 8):
-    from importlib_metadata import version, PackageNotFoundError
-else:
-    from importlib.metadata import version, PackageNotFoundError
-
 from .catalog import PRESETS, get_schema, register_entity
 from .data_handling.io import extract_entities
+
+# Load version and PackageNotFoundError from importlib.metadata (Python >= 3.8)
+try:
+    from importlib.metadata import PackageNotFoundError, version
+except ImportError:
+    from importlib_metadata import PackageNotFoundError, version  # Fallback for Python < 3.8
 
 try:
     # The package name is found in the [project] section of pyproject.toml
