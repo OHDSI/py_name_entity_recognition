@@ -10,7 +10,7 @@ of predefined schemas for scientific and biomedical text.
 try:
     from importlib.metadata import PackageNotFoundError, version
 except ImportError:
-    from importlib_metadata import PackageNotFoundError, version  # Fallback for Python < 3.8
+    from importlib_metadata import PackageNotFoundError, version
 
 # Local imports
 from .catalog import PRESETS, get_schema, register_entity
