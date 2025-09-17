@@ -6,25 +6,23 @@ agentic, and self-refining extraction workflows. It includes a comprehensive cat
 of predefined schemas for scientific and biomedical text.
 """
 
-import os
-
-import toml
+import sys
 
 from .catalog import PRESETS, get_schema, register_entity
 from .data_handling.io import extract_entities
 
-# Correctly locate pyproject.toml relative to the current file
-# __file__ -> /app/py_name_entity_recognition/__init__.py
-# os.path.dirname(__file__) -> /app/py_name_entity_recognition
-# os.path.dirname(os.path.dirname(__file__)) -> /app
-pyproject_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "pyproject.toml"
-)
+# Load version and PackageNotFoundError from importlib.metadata (Python >= 3.8)
+try:
+    from importlib.metadata import PackageNotFoundError, version
+except ImportError:
+    from importlib_metadata import PackageNotFoundError, version  # Fallback for Python < 3.8
 
-with open(pyproject_path) as f:
-    pyproject_data = toml.load(f)
-
-__version__ = pyproject_data["tool"]["poetry"]["version"]
+try:
+    # The package name is found in the [project] section of pyproject.toml
+    __version__ = version("py-name-entity-recognition")
+except PackageNotFoundError:
+    # Fallback for when the package is not installed (e.g., in development)
+    __version__ = "0.0.0-dev"
 
 __all__ = [
     "extract_entities",
