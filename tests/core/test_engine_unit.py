@@ -41,7 +41,7 @@ class FakeLLM(BaseLanguageModel):
     structured output is invoked.
     """
 
-    response: Any
+    response: Any = None
 
     class Config:
         """Pydantic config to allow arbitrary types."""
@@ -416,6 +416,7 @@ async def test_extract_entities_json_output(fake_llm_factory):
             input_data=text,
             schema=WorkSchema,
             output_format="json",
+            model_config={"provider": "fake", "model_name": "fake", "AZURE_OPENAI_DEPLOYMENT": "dummy"}
         )
 
     assert isinstance(json_output, dict)

@@ -13,6 +13,7 @@ from py_name_entity_recognition.data_handling.io import (
     extract_entities,
 )
 from py_name_entity_recognition.schemas.core_schemas import BaseEntity, Entities
+from py_name_entity_recognition.models.config import ModelConfig
 
 
 class Person(BaseEntity):
@@ -116,21 +117,21 @@ async def test_extract_entities(mock_factory, mock_engine):
     mock_engine_instance.run = AsyncMock(return_value=[("John", "S-PERSON")])
 
     # Test with string
-    result = await extract_entities("John", Person, output_format="json")
+    result = await extract_entities("John", Person, output_format="json", model_config={"provider": "openai", "model": "gpt-4", "AZURE_OPENAI_DEPLOYMENT": "dummy"})
     assert result == {"entities": [{"type": "PERSON", "text": "John"}]}
 
     # Test with list
-    results = await extract_entities(["John", "Doe"], Person, output_format="conll")
+    results = await extract_entities(["John", "Doe"], Person, output_format="conll", model_config={"provider": "openai", "model": "gpt-4", "AZURE_OPENAI_DEPLOYMENT": "dummy"})
     assert len(results) == 2
     assert results[0] == [("John", "S-PERSON")]
 
     # Test with invalid schema
     with pytest.raises(ValueError):
-        await extract_entities("test", "not a schema")
+        await extract_entities("test", "not a schema", model_config={"provider": "openai", "model": "gpt-4", "AZURE_OPENAI_DEPLOYMENT": "dummy"})
 
     # Test with invalid output format
     with pytest.raises(ValueError):
-        await extract_entities("test", Person, output_format="invalid")
+        await extract_entities("test", Person, output_format="invalid", model_config={"provider": "openai", "model": "gpt-4", "AZURE_OPENAI_DEPLOYMENT": "dummy"})
 
 
 @pytest.mark.asyncio
@@ -141,7 +142,7 @@ async def test_extract_entities_with_model_config_dict(mock_factory, mock_engine
     mock_engine_instance.run = AsyncMock(return_value=[("John", "S-PERSON")])
 
     await extract_entities(
-        "John", Person, model_config={"provider": "openai", "name": "gpt-4"}
+        "John", Person, model_config={"provider": "openai", "model": "gpt-4", "AZURE_OPENAI_DEPLOYMENT": "dummy"}
     )
     mock_factory.create.assert_called_once()
 
@@ -150,5 +151,5 @@ async def test_extract_entities_with_model_config_dict(mock_factory, mock_engine
 @patch("py_name_entity_recognition.data_handling.io.CoreEngine")
 @patch("py_name_entity_recognition.data_handling.io.ModelFactory")
 async def test_extract_entities_with_empty_list(mock_factory, mock_engine):
-    result = await extract_entities([], Person)
+    result = await extract_entities([], Person, model_config={"provider": "openai", "model_name": "gpt-4", "AZURE_OPENAI_DEPLOYMENT": "dummy"})
     assert result == []
