@@ -65,7 +65,7 @@ class ModelFactory:
         if config.max_tokens is not None:
             params["max_tokens"] = config.max_tokens
         if config.top_p is not None:
-            model_kwargs["top_p"] = config.top_p
+            params["top_p"] = config.top_p
         if model_kwargs:
             params["model_kwargs"] = model_kwargs
         return AzureChatOpenAI(**params)
