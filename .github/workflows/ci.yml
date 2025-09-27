@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Run pre-commit
-        uses: pre-commit/action@2c7b3805fd2a0b8c04d9d2d8f2597de27d0d8053 # v3.0.1
+        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
 
   test:
     name: Test Suite
