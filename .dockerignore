@@ -1,0 +1,52 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Poetry
+.poetry/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Documentation
+/docs/
+
+# Tests
+/tests/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Other
+.DS_Store
+*.log
+*.pot
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.out
+secrets.env
