@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Run pre-commit
-        uses: pre-commit/action@5677145d4e758e11b3a62d13a7c6451640a34b22 # v3.0.1
+        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
 
   test:
     name: Test
@@ -61,7 +61,7 @@ jobs:
         run: poetry run pytest --cov=py_name_entity_recognition --cov-report=xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@29386c70ef048224c73869c9b681534064568853 # v4.5.0
+        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
         if: ${{ !cancelled() }}
         with:
           files: ./coverage.xml
