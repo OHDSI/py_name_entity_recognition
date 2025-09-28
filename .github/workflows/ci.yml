@@ -54,6 +54,9 @@ jobs:
       - name: Install Poetry
         run: pipx install poetry
 
+      - name: Add pipx to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
       - name: Install dependencies
         run: poetry install --with dev
 
