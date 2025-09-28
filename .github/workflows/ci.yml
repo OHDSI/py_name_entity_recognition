@@ -1,91 +1,86 @@
-name: Test and Publish
+name: CI
 
 on:
   push:
     branches:
-      - 'main'
-      - 'develop'
-    tags:
-      - 'v*'
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Set up Python
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
+        with:
+          python-version: '3.12'
+      - name: Run pre-commit
+        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
+
   test:
+    name: Test
+    needs: [lint]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.10", "3.11"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.11', '3.12']
 
     steps:
-    - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install Poetry
-      run: |
-        pip install poetry
-        poetry config virtualenvs.create false
+      - name: Install Poetry and add to PATH
+        run: |
+          pipx install poetry
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    - name: Install dependencies
-      run: |
-        poetry install --no-root --no-interaction --no-ansi
+      - name: Get Poetry cache directory
+        id: poetry-cache-dir
+        run: echo "dir=$(poetry config virtualenvs.path)" >> $GITHUB_OUTPUT
+        shell: bash
 
-    - name: Download spaCy model
-      run: |
-        poetry run python -m spacy download en_core_web_sm
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        id: poetry-cache
+        with:
+          path: ${{ steps.poetry-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-poetry-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-${{ matrix.python-version }}-
 
-    - name: Lint with ruff
-      run: |
-        poetry run ruff check .
+      - name: Install dependencies
+        run: poetry install --with dev
 
-    - name: Format with black
-      run: |
-        poetry run black --check .
+      - name: Run tests with coverage
+        run: poetry run pytest --cov=py_name_entity_recognition --cov-report=xml
 
-    - name: Test with pytest
-      run: |
-        poetry run pytest --cov=py_name_entity_recognition --cov-report=xml
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-
-  publish:
-    needs: test
-    runs-on: ubuntu-latest
-    environment: pypi
-    # Only publish on tags that start with v
-    if: startsWith(github.ref, 'refs/tags/v')
-    permissions:
-      contents: read
-      id-token: write
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
-
-    - name: Install Poetry
-      run: |
-        pip install poetry
-
-    - name: Set version from tag
-      run: |
-        # The GITHUB_REF is in the format 'refs/tags/vX.Y.Z'
-        # We extract X.Y.Z
-        VERSION=${GITHUB_REF#refs/tags/v}
-        poetry version $VERSION
-    - name: Build package
-      run: |
-        poetry build
-
-    - name: Publish package
-      uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
+        if: ${{ !cancelled() }}
+        with:
+          files: ./coverage.xml
+          flags: ${{ matrix.os }}-py${{ matrix.python-version }}
+          fail_ci_if_error: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
