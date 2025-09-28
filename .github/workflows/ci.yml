@@ -49,13 +49,25 @@ jobs:
         uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'poetry'
 
-      - name: Install Poetry
-        run: pipx install poetry
+      - name: Install Poetry and add to PATH
+        run: |
+          pipx install poetry
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      - name: Add pipx to PATH
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Get Poetry cache directory
+        id: poetry-cache-dir
+        run: echo "dir=$(poetry config virtualenvs.path)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        id: poetry-cache
+        with:
+          path: ${{ steps.poetry-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-poetry-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-${{ matrix.python-version }}-
 
       - name: Install dependencies
         run: poetry install --with dev
