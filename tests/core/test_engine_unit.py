@@ -134,7 +134,8 @@ async def test_engine_filters_llm_hallucinations():
 
     # The LLM hallucinates a location that is not in the text.
     llm_response = UnitTestSchema(
-        Person=["Jane Doe"], Location=["Cupertino"]  # This is a hallucination.
+        Person=["Jane Doe"],
+        Location=["Cupertino"],  # This is a hallucination.
     )
     fake_llm = FakeLLM(response=llm_response)
     engine = CoreEngine(model=fake_llm, schema=UnitTestSchema)
@@ -194,7 +195,8 @@ async def test_agentic_mode_self_correction():
 
     # 1. First, the LLM hallucinates a location.
     initial_response = UnitTestSchema(
-        Person=["Dr. Emily Carter"], Location=["Paris"]  # Hallucination
+        Person=["Dr. Emily Carter"],
+        Location=["Paris"],  # Hallucination
     )
     # 2. After the refinement prompt, the LLM returns the correct output.
     corrected_response = UnitTestSchema(Person=["Dr. Emily Carter"], Location=[])

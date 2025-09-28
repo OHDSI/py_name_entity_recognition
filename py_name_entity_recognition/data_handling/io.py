@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def _resolve_schema(
-    schema_input: Union[type[BaseModel], str, dict[str, Any]]
+    schema_input: Union[type[BaseModel], str, dict[str, Any]],
 ) -> type[BaseModel]:
     """
     Helper function to resolve various input types into a Pydantic BaseModel.

@@ -7,10 +7,7 @@ of predefined schemas for scientific and biomedical text.
 """
 
 # Standard library
-try:
-    from importlib.metadata import PackageNotFoundError, version
-except ImportError:
-    from importlib_metadata import PackageNotFoundError, version
+from importlib.metadata import PackageNotFoundError, version
 
 # Local imports
 from .catalog import PRESETS, get_schema, register_entity
@@ -19,7 +16,7 @@ from .data_handling.io import extract_entities
 # Package version
 try:
     # The package name is found in the [project] section of pyproject.toml
-    __version__ = version("py-name-entity-recognition")
+    __version__ = version("py_name_entity_recognition")
 except PackageNotFoundError:
     # Fallback for when the package is not installed (e.g., in development)
     __version__ = "0.0.0-dev"
