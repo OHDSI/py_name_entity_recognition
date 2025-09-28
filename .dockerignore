@@ -1,0 +1,34 @@
+# Version control
+.git/
+.gitignore
+
+# CI/CD configuration
+.github/
+.pre-commit-config.yaml
+CI_CD_STRATEGY.md
+
+# Python caches and environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+
+# Build and distribution artifacts
+dist/
+build/
+*.egg-info/
+
+# Documentation
+docs/
+
+# Local configuration
+.env
+*.log
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
